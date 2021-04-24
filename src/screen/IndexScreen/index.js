@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import {Context} from '../../context/BlogContext';
 
-const IndexScreen = () => {
+const IndexScreen = ({navigation}) => {
   const {state, addBlogPost, deleteBlogPost} = useContext(Context);
 
   return (
@@ -21,19 +21,32 @@ const IndexScreen = () => {
         keyExtractor={blogPost => blogPost.title}
         renderItem={({item}) => {
           return (
-            <View style={styles.row}>
-              <Text style={styles.title}>
-                {item.title}- Nu:{item.id}
-              </Text>
-              <TouchableOpacity onPress={() => deleteBlogPost(item.id)}>
-                <Text>Trash</Text>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Show', {id: item.id})}>
+              <View style={styles.row}>
+                <Text style={styles.title}>
+                  {item.title}- Nu:{item.id}
+                </Text>
+                <TouchableOpacity onPress={() => deleteBlogPost(item.id)}>
+                  <Text>Trash</Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
           );
         }}
       />
     </View>
   );
+};
+
+IndexScreen.navigationOptions = ({navigation}) => {
+  return {
+    headerRight: () => (
+      <TouchableOpacity onPress={() => navigation.navigate('Create')}>
+        <Text>ADD</Text>
+      </TouchableOpacity>
+    ),
+  };
 };
 
 const styles = StyleSheet.create({
